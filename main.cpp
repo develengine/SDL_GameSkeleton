@@ -121,7 +121,7 @@ void audio_callback(void* userdata, Uint8* stream, int len) {
     int16_t lastOutput = (int16_t)(ALPHA * ((rand() % UINT16_MAX) - INT16_MAX) * VOL);
     for (int i = 0; i < len / sizeof(int16_t); i += 2) {
         int16_t noise = (int16_t)(((rand() % UINT16_MAX) - INT16_MAX) * VOL);
-        int16_t newOutput = ALPHA * noise + (1 - ALPHA) * lastOutput;
+        int16_t newOutput = (int16_t)(ALPHA * noise + (1 - ALPHA) * lastOutput);
         output[i] = newOutput;
         output[i + 1] = newOutput;
         lastOutput = newOutput;

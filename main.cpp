@@ -21,7 +21,7 @@ const int WINDOW_WIDTH = 1080;
 const int WINDOW_HEIGHT = 720;
 const char *title = "Game.";
 
-const float VOL = 0.1f;
+const float VOL = 1.0f;
 
 SDL_Window *window = nullptr;
 SDL_Renderer *renderer = nullptr;
@@ -117,10 +117,14 @@ void drawText(
 
 void audio_callback(void* userdata, Uint8* stream, int len) {
     int16_t *output = (int16_t*)stream;
+    const float ALPHA = 0.009f;
+    int16_t lastOutput = (int16_t)(ALPHA * ((rand() % UINT16_MAX) - INT16_MAX) * VOL);
     for (int i = 0; i < len / sizeof(int16_t); i += 2) {
         int16_t noise = (int16_t)(((rand() % UINT16_MAX) - INT16_MAX) * VOL);
-        output[i] = noise;
-        output[i + 1] = noise;
+        int16_t newOutput = ALPHA * noise + (1 - ALPHA) * lastOutput;
+        output[i] = newOutput;
+        output[i + 1] = newOutput;
+        lastOutput = newOutput;
     }
 }
 
